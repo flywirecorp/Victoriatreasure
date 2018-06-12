@@ -1,0 +1,19 @@
+image: docker:stable-git
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: "tcp://docker:2375"
+  AWS_DEFAULT_REGION: "eu-west-2"
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - rake test
+  tags:
+    - flywire-playground
