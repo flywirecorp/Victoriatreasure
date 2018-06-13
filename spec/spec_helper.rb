@@ -13,9 +13,7 @@ module Helpers
   end
 
   def stub_s3_resource
-    s3_resource = Aws::S3::Resource.new(client: stub_s3_client)
-
-    s3_resource
+    Aws::S3::Resource.new(client: stub_s3_client)
   end
 
   def stub_kms_client
