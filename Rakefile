@@ -6,6 +6,8 @@ RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
+task :test=> :spec
+
 desc 'Semver increase Patch version'
 task :spatch do
   v = SemVer.find

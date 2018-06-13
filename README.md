@@ -22,6 +22,29 @@ If everything goes right, you'll get the following output:
 [SUCCESS] Secret my_secret_key added to flywire-playground-secrets/apps/testing-secrets/app.json.encrypted
 ```
 
+#### secrets.env
+
+This file has the following secrets:
+
+```bash
+AWS_DEFAULT_REGION=
+AWS_SECRET_ACCESS_KEY=
+AWS_ACCESS_KEY_ID=
+KMS_KEY_ID=
+```
+
+There is a `KMS_KEY_ID` for each AWS account, for getting the ID of the current account run:
+
+```bash
+$ ACCOUNT_ALIAS=`aws iam list-account-aliases --query 'AccountAliases[0]' --output text`
+$ aws kms list-aliases | grep -h1 $ACCOUNT_ALIAS | grep TargetKeyId
+```
+
+The output will be something like:
+```json
+"TargetKeyId": "ca242e97-d284-4219-9bce-cea69c618ff8"
+```
+
 ### What's happening behind the scenes
 
 * Downloads and decrypt the specified file into memory if it exists, if not, it creates a new file in memory
