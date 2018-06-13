@@ -7,7 +7,7 @@ RSpec.describe S3Secrets::Creator do
       stubbed_s3_client = stub_s3_client
       stubbed_kms_client = stub_kms_client
 
-      @creator = S3Secrets::Creator.new(
+      creator = S3Secrets::Creator.new(
         stub_s3_resource,
         stubbed_s3_client,
         stubbed_kms_client,
@@ -58,7 +58,7 @@ RSpec.describe S3Secrets::Creator do
         .with(expected_put_object_args)
         .and_call_original
 
-      @creator.create_secret(file_path, secret_key, secret_value)
+      creator.create_secret(file_path, secret_key, secret_value)
     end
   end
 end
