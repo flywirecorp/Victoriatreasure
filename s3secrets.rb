@@ -6,12 +6,11 @@ def check_env_vars
     AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION KMS_KEY_ID
   )
 
-  env_vars_to_check.each do |variable|
-    if ENV[variable].nil?
-      puts "[FAIL] Environment variable #{variable} not set"
-      exit 1
-    end
-  end
+  vars = env_vars_to_check.select { |var| ENV[var].nil? }
+  return if vars.empty?
+
+  puts "[FAIL] Environment variables #{vars.join(' ')} not set"
+  exit 1
 end
 
 def instance_creator
