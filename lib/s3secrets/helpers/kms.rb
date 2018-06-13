@@ -21,6 +21,8 @@ module S3Secrets
         JSON.parse(decrypted_object)
       end
 
+      private
+
       def plaintext?(content)
         content == '{}'
       end

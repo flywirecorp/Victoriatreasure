@@ -6,11 +6,6 @@ module S3Secrets
         @s3_resource = s3_resource
       end
 
-      def file_exists_in_s3(bucket, file)
-        bucket = @s3_resource.bucket(bucket)
-        bucket.object(file).exists?
-      end
-
       def download_file(bucket, file)
         tmp_file = '{}'
         if file_exists_in_s3(bucket, file)
@@ -38,6 +33,13 @@ module S3Secrets
 
       def file_path_from_file_uri(file_uri)
         file_uri[file_uri.index('/') + 1..file_uri.length]
+      end
+
+      private
+
+      def file_exists_in_s3(bucket, file)
+        bucket = @s3_resource.bucket(bucket)
+        bucket.object(file).exists?
       end
     end
   end
