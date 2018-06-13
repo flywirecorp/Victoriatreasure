@@ -7,15 +7,13 @@ module S3Secrets
       end
 
       def download_file(bucket, file)
-        tmp_file = '{}'
+        json_file = empty_json_file
         if file_exists_in_s3(bucket, file)
           object = { bucket: bucket, key: file }
-          downloaded_file = @s3_client.get_object(object).body.read
-
-          tmp_file = downloaded_file
+          json_file = @s3_client.get_object(object).body.read
         end
 
-        tmp_file
+        json_file
       end
 
       def upload_file(file, bucket, file_path)
@@ -36,6 +34,10 @@ module S3Secrets
       end
 
       private
+
+      def empty_json_file
+        '{}'
+      end
 
       def file_exists_in_s3(bucket, file)
         bucket = @s3_resource.bucket(bucket)
