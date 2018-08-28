@@ -21,13 +21,39 @@ def instance_creator
   S3Secrets::Creator.new(s3_resource, s3_client, kms_client, kms_key_id)
 end
 
-secret_file = ARGV[0]
-key_to_add = ARGV[1]
-value_to_add = ARGV[2]
+def instance_reader
+  s3_resource = Aws::S3::Resource.new(region: ENV['AWS_DEFAULT_REGION'])
+  s3_client = Aws::S3::Client.new(region: ENV['AWS_DEFAULT_REGION'])
+  kms_client = Aws::KMS::Client.new
+  kms_key_id = ENV['KMS_KEY_ID']
+  S3Secrets::Reader.new(s3_resource, s3_client, kms_client, kms_key_id)
+end
+
+def is_update?
+  ARGV.length == 3
+end
+
+def is_read?
+  ARGV.length == 2
+end
+
+def perform_update
+  secret_file = ARGV[0]
+  key_to_add = ARGV[1]
+  value_to_add = ARGV[2]
+  creator = instance_creator
+  creator.create_secret(secret_file, key_to_add, value_to_add)
+  puts "[SUCCESS] Secret #{key_to_add} added to #{secret_file}"
+
+end
+
+def perform_read
+  secret_file = ARGV[0]
+  key_to_read = ARGV[1]
+  reader = instance_reader
+  puts "[SUCCESS] Secret #{key_to_read} content is #{reader.get_secret(secret_file, key_to_read)}"
+end
 
 check_env_vars
-creator = instance_creator
-
-creator.create_secret(secret_file, key_to_add, value_to_add)
-
-puts "[SUCCESS] Secret #{key_to_add} added to #{secret_file}"
+perform_update if is_update? 
+perform_read if is_read?
