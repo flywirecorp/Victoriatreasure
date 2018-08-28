@@ -2,7 +2,7 @@
 
 s3-json-secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
-## Usage
+## Usage to update/add a new value
 
 ```bash
 $ docker build -t your_desired_tag .
@@ -21,6 +21,28 @@ If everything goes right, you'll get the following output:
 ```text
 [SUCCESS] Secret my_secret_key added to flywire-playground-secrets/apps/testing-secrets/app.json.encrypted
 ```
+
+
+## Usage to get a value
+
+```bash
+$ docker build -t your_desired_tag .
+# Edit the secrets.env file to add the necessary variables
+$ docker run --env-file=secrets.env your_desired_tag flywire-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key
+```
+
+Where:
+
+* `playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
+* `my_secret_key`: is the secret key to be read
+
+
+If everything goes right, you'll get the following output:
+
+```text
+[SUCCESS] Secret my_secret_key content is SUPER_SECRET_CONTENT
+```
+
 
 #### secrets.env
 
