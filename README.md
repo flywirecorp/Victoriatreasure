@@ -2,6 +2,19 @@
 
 s3-json-secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
+
+## Getting the secrets.env file
+
+Be sure you've properly installed and configured the [aws-okta](https://confluence.flywire.tech/display/SRE/AWS+programmatic+credentials+via+Okta), so you'll be able to run:
+
+```bash
+$ ./get_aws_secrets.sh <your-aws-account-profile>
+```
+
+Your AWS account profile names can be found in `~/.aws/config`.
+
+Once you run this command, you'll be able to find a `secrets.env` file in the root path of the repo. 
+
 ## Usage to update/add a new value
 
 ```bash
