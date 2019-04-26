@@ -3,6 +3,8 @@
 ![Victoria](imgs/victoria.png)
 ![Secrets](imgs/secrets.gif)
 
+[![CircleCI](https://circleci.com/gh/peertransfer/VictoriaSecrets.svg?style=svg)](https://circleci.com/gh/peertransfer/VictoriaSecrets)
+
 Victoria Secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
 ## What's happening behind the scenes
