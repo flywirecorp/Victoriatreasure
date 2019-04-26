@@ -1,7 +1,7 @@
 # Victoria Secrets
 
-![Victoria](./img/victoria.png "Victoria")
-![Secrets](./img/secrets.gif "Secrets")
+![Victoria](imgs/victoria.png)
+![Secrets](imgs/secrets.gif)
 
 Victoria Secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
@@ -74,4 +74,4 @@ In general, Victoria secrets follows [semver](https://semver.org/)
 
 ## Authors
 
-* **Super Mega Awesome SRE Team**
+* **Super Mega Awesome Flywire SRE Team**
