@@ -1,11 +1,11 @@
-# Victoria Secrets
+# Victoria Treasure
 
 ![Victoria](imgs/victoria.png)
-![Secrets](imgs/secrets.gif)
+![Treasure](imgs/Treasure.png)
 
 [![CircleCI](https://circleci.com/gh/peertransfer/VictoriaSecrets.svg?style=svg)](https://circleci.com/gh/peertransfer/VictoriaSecrets)
 
-Victoria Secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
+Victoria Treasure is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
 ## What's happening behind the scenes
 
@@ -13,7 +13,7 @@ Victoria Secrets is an utility for handling secrets in S3 avoiding manual steps 
 * Edits the file adding the specified key and value
 * Encrypts and upload the changes to S3, replacing the old file
 
-## Setting up Victoria Secrets
+## Setting up Victoria Treasure
 
 Create a file called `secrets.env` with the following environment variables:
 
