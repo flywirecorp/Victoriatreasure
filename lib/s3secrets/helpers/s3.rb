@@ -6,11 +6,26 @@ module S3Secrets
         @s3_resource = s3_resource
       end
 
+      def get_bucket_region(bucket)
+        location = @s3_client.get_bucket_location(bucket: bucket)
+        region = JSON.parse(location["location_constraint"].to_json)
+        env_region = ENV['AWS_DEFAULT_REGION']
+        # if we find the bucket and consequently the region it's in
+        if region          
+          puts "[Hint] The bucket '#{bucket}' is located in '#{region}' region. Your ENV region is set to '#{env_region}'." if !(region.eql? env_region)
+        end
+      end
+      
       def download_file(bucket, file)
         json_file = empty_json_file
-        if file_exists_in_s3(bucket, file)
-          object = { bucket: bucket, key: file }
-          json_file = @s3_client.get_object(object).body.read
+        begin
+          if file_exists_in_s3(bucket, file)
+            object = { bucket: bucket, key: file }
+            json_file = @s3_client.get_object(object).body.read
+          end
+        rescue StandardError => e
+          get_bucket_region(bucket)
+          raise "[Error] #{e.inspect}"
         end
 
         json_file

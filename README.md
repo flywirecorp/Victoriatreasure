@@ -24,6 +24,8 @@ AWS_ACCESS_KEY_ID=
 KMS_KEY_ID=
 ```
 
+Region should be set to the one used both by the S3 bucket and the KMS key, otherwise you will get an error.
+
 ## Usage to update/add a new value
 
 ```bash
