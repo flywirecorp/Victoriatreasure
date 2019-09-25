@@ -7,12 +7,14 @@ module S3Secrets
       end
 
       def get_bucket_region(bucket)
-        location = @s3_client.get_bucket_location(bucket: bucket)
-        region = JSON.parse(location["location_constraint"].to_json)
+        location = @s3_client.get_bucket_location(bucket: bucket).to_h
+        region = location[:location_constraint]
         env_region = ENV['AWS_DEFAULT_REGION']
         # if we find the bucket and consequently the region it's in
-        if region          
-          puts "[Hint] The bucket '#{bucket}' is located in '#{region}' region. Your ENV region is set to '#{env_region}'." if !(region.eql? env_region)
+        unless region.empty?
+          hint = "[Hint] The bucket '#{bucket}' is in '#{region}' region. Your ENV region is set to '#{env_region}'."
+          puts hint if !(region.eql? env_region)
+          region
         end
       end
       
@@ -23,7 +25,7 @@ module S3Secrets
             object = { bucket: bucket, key: file }
             json_file = @s3_client.get_object(object).body.read
           end
-        rescue StandardError => e
+        rescue Aws::S3::Errors::Http301Error => e
           get_bucket_region(bucket)
           raise "[Error] #{e.inspect}"
         end
