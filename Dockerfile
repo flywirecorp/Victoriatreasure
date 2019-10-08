@@ -1,4 +1,4 @@
-FROM ruby:2.5.1-alpine
+FROM ruby:2.6.1-alpine
 
 ENV CONTAINER_ROOT /app
 RUN mkdir -p $CONTAINER_ROOT
