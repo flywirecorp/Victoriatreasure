@@ -47,11 +47,19 @@ def perform_update
 
 end
 
+def is_empty(secret)
+  secret.nil? || secret == ''
+end
+
 def perform_read
   secret_file = ARGV[0]
   key_to_read = ARGV[1]
   reader = instance_reader
-  puts "[SUCCESS] Secret #{key_to_read} content is #{reader.get_secret(secret_file, key_to_read)}"
+  secret = reader.get_secret(secret_file, key_to_read)
+
+  return puts "[TBD] Secret #{key_to_read} has not been defined yet" if is_empty(secret)
+
+  puts "[SUCCESS] Secret #{key_to_read} content is #{secret}"
 end
 
 check_env_vars
