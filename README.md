@@ -7,12 +7,6 @@
 
 Victoria Treasure is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
-## What's happening behind the scenes
-
-* Downloads and decrypt the specified file into memory if it exists, if not, it creates a new file in memory
-* Edits the file adding the specified key and value
-* Encrypts and upload the changes to S3, replacing the old file
-
 ## Setting up Victoria Treasure
 
 Create a file called `secrets.env` with the following environment variables:
@@ -29,34 +23,40 @@ Region should be set to the one used both by the S3 bucket and the KMS key, othe
 ## Usage to update/add a new value
 
 ```bash
-$ docker build -t your_desired_tag .
+$ docker build -t victoria_treasure .
 # Remember to edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env your_desired_tag flywire-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key my_value
+$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key my_value
 ```
 
 Where:
 
-* `flywire-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to edit, if you put a file that not exists in the s3, it will create a new one
+* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to edit, if you put a file that not exists in the s3, it will create a new one
 * `my_secret_key`: is the secret key to be added
 * `my_value`: is the value of that key
 
 If everything goes right, you'll get the following output:
 
 ```text
-[SUCCESS] Secret my_secret_key added to flywire-playground-secrets/apps/testing-secrets/app.json.encrypted
+[SUCCESS] Secret my_secret_key added to victoria-playground-secrets/apps/testing-secrets/app.json.encrypted
 ```
+
+## What's happening behind the scenes
+
+* Downloads and decrypt the specified file into memory if it exists, if not, it creates a new file in memory
+* Edits the file adding the specified key and value
+* Encrypts and upload the changes to S3, replacing the old file
 
 ## Usage to get a value
 
 ```bash
-$ docker build -t your_desired_tag .
+$ docker build -t victoria_treasure .
 # Edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env your_desired_tag flywire-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key
+$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key
 ```
 
 Where:
 
-* `playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
+* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
 * `my_secret_key`: is the secret key to be read
 
 
