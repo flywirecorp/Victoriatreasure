@@ -14,7 +14,7 @@ RSpec.describe S3Secrets::Creator do
         kms_key_id
       )
 
-      file_path = 'mys3/uploads/file.json.encrypted'
+      file_path = 'mys3/uploads/file'
       secret_key = 'another_key'
       secret_value = 'myvalue'
       bucket = 'mys3'

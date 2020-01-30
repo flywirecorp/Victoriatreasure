@@ -1,5 +1,5 @@
-require_relative './helpers/s3'
-require_relative './helpers/kms'
+require 's3secrets/helpers/s3'
+require 's3secrets/helpers/kms'
 
 module S3Secrets
   class Creator
@@ -9,8 +9,9 @@ module S3Secrets
     end
 
     def create_secret(file_uri, key, value)
-      bucket = @s3_helper.bucket_from_file_uri(file_uri)
-      file_path = @s3_helper.file_path_from_file_uri(file_uri)
+      object = File.extname(file_uri).empty? ? "#{file_uri}.json.encrypted" : file_uri
+      bucket = @s3_helper.bucket_from_file_uri(object)
+      file_path = @s3_helper.file_path_from_file_uri(object)
 
       decrypted_json = get_json_secret_content(bucket, file_path)
       decrypted_json = add_key_value(decrypted_json, key, value)
@@ -27,7 +28,7 @@ module S3Secrets
     end
 
     def encrypt_json_and_upload_to_s3(file_to_upload, bucket, file_path)
-      encrypted_file = @kms_helper.encrypt file_to_upload
+      encrypted_file = @kms_helper.encrypt(file_to_upload)
 
       @s3_helper.upload_file(encrypted_file, bucket, file_path)
     end
