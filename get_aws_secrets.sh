@@ -5,21 +5,21 @@
 aws_account_profile=$1
 
 aws-okta exec $aws_account_profile -- env | grep "AWS_" > secrets.env
-echo "Where are you going to create the secret? branch|staging|production"
+echo "Where are you going to create the secret? b, branch | s, staging | p, production"
 
 read secret_location
 case "$secret_location" in
-   branch)
+   b|branch)
      ACCOUNT_ALIAS=victoria-playground
    ;;
-   staging)
+   s|staging)
      ACCOUNT_ALIAS=victoria-staging
    ;;
-   production)
+   p|production)
      ACCOUNT_ALIAS=victoria-production
    ;;
    *)
-      echo "Invalid answer, please choose between branch, staging and production"
+      echo "Invalid answer, please choose between: b, branch | s, staging | p, production"
       exit 1
    ;;
 esac
