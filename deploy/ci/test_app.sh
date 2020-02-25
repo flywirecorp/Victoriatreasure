@@ -1,9 +1,11 @@
 #!/bin/sh
 set -e
 
-CONTAINER_TEST_IMAGE="s3-json-secrest"
+CONTAINER_TEST_IMAGE="victoriatreasure-test"
 
-rm .dockerignore
+mv .dockerignore deploy
 docker build -t "$CONTAINER_TEST_IMAGE" .
 
 docker run --entrypoint="" "$CONTAINER_TEST_IMAGE" rake test
+
+mv deploy/.dockerignore .

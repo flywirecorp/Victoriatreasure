@@ -1,0 +1,47 @@
+name: Docker Release Image CI
+
+on:
+  push:
+    branches:
+    - master
+env:
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+  CONTAINER_TEST_IMAGE: victoriatreasure-test
+  VERSION_FILE: version.txt
+  CONTAINER_RELEASE_IMAGE: flywire/victoriatreasure
+
+jobs:
+  release:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker linting
+      run: docker run --rm -i hadolint/hadolint < Dockerfile
+
+    - name: Unit testing
+      run: |
+        mv .dockerignore deploy
+        docker build -t $CONTAINER_TEST_IMAGE .
+        mv deploy/.dockerignore .
+        docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake test
+
+    - name: Retrieve version
+      run: docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake version > $VERSION_FILE
+
+    - name: Build release image
+      run: |
+        VERSION=$(cat $VERSION_FILE)
+        docker build -t $CONTAINER_RELEASE_IMAGE:$VERSION .
+
+    - name: Push git tag
+      run: |
+        VERSION=$(cat $VERSION_FILE)
+        git tag -a $VERSION
+        git push origin $VERSION
+
+    - name: Push release image
+      run: |
+        VERSION=$(cat $VERSION_FILE)
+        docker login -u ${DOCKER_HUB_USERNAME} -p "${DOCKER_HUB_PASSWORD}"
+        docker push ${CONTAINER_RELEASE_IMAGE}:$(VERSION)
