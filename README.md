@@ -3,8 +3,6 @@
 ![Victoria](imgs/victoria.png)
 ![Treasure](imgs/Treasure.png)
 
-[![CircleCI](https://circleci.com/gh/peertransfer/Victoriatreasure.svg?style=svg)](https://circleci.com/gh/peertransfer/Victoriatreasure)
-
 Victoria Treasure is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
 
 ## Setting up Victoria Treasure
