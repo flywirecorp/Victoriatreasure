@@ -63,5 +63,5 @@ def perform_read
 end
 
 check_env_vars
-perform_update if is_update? 
+perform_update if is_update?
 perform_read if is_read?

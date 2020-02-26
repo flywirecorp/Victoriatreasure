@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require_relative '../lib/s3secrets.rb'
+require 's3secrets'
 require 'aws-sdk-s3'
 
 module Helpers

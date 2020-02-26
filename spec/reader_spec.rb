@@ -14,7 +14,7 @@ RSpec.describe S3Secrets::Reader do
         kms_key_id
       )
 
-      file_path = 'mys3/uploads/file.json.encrypted'
+      file_path = 'mys3/uploads/file'
       bucket = 'mys3'
       file_key = 'uploads/file.json.encrypted'
       json_content = { my_secret: 'this_is_my_secret_peeeim' }

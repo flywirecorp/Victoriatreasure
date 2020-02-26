@@ -25,12 +25,12 @@ Region should be set to the one used both by the S3 bucket and the KMS key, othe
 ```bash
 $ docker build -t victoria_treasure .
 # Remember to edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key my_value
+$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app my_secret_key my_value
 ```
 
 Where:
 
-* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to edit, if you put a file that not exists in the s3, it will create a new one
+* `victoria-playground-secrets/apps/testing-secrets/app` is the route where the secret file is stored and you want to edit, if you put a file that not exists in the s3, it will create a new one
 * `my_secret_key`: is the secret key to be added
 * `my_value`: is the value of that key
 
@@ -51,12 +51,12 @@ If everything goes right, you'll get the following output:
 ```bash
 $ docker build -t victoria_treasure .
 # Edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key
+$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app my_secret_key
 ```
 
 Where:
 
-* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
+* `victoria-playground-secrets/apps/testing-secrets/app`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
 * `my_secret_key`: is the secret key to be read
 
 
