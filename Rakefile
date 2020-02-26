@@ -40,3 +40,9 @@ task :stag do
   v = SemVer.find
   sh "git tag -a #{v.to_s} -m 'Tagging #{v.to_s}'"
 end
+
+desc 'Retrieve raw version'
+task :version do
+  version = SemVer.find.to_s
+  puts version
+end

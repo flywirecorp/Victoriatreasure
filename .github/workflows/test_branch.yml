@@ -1,0 +1,25 @@
+name: Docker Branch Image CI
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+
+env:
+  CONTAINER_TEST_IMAGE: victoriatreasure-test
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker linting
+      run: docker run --rm -i hadolint/hadolint < Dockerfile
+
+    - name: Unit testing
+      run: |
+        mv .dockerignore deploy
+        docker build -t $CONTAINER_TEST_IMAGE .
+        mv deploy/.dockerignore .
+        docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake test
