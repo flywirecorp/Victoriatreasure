@@ -1,4 +1,6 @@
-require_relative './lib/s3secrets.rb'
+$LOAD_PATH.unshift('lib')
+
+require 's3secrets'
 require 'aws-sdk-s3'
 
 def check_env_vars

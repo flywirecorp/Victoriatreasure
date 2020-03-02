@@ -1,2 +1,2 @@
-require_relative 's3secrets/creator'
-require_relative 's3secrets/reader'
+require 's3secrets/creator'
+require 's3secrets/reader'
