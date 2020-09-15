@@ -36,7 +36,7 @@ def is_update?
 end
 
 def is_read?
-  ARGV.length == 2
+  ARGV.length <= 2
 end
 
 def perform_update

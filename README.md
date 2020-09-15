@@ -66,6 +66,27 @@ If everything goes right, you'll get the following output:
 [SUCCESS] Secret my_secret_key content is SUPER_SECRET_CONTENT
 ```
 
+## Usage to get the whole secrets file decrypted
+
+```bash
+$ docker build -t victoria_treasure .
+# Edit the secrets.env file to add the necessary variables
+$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app
+```
+
+Where:
+
+* `victoria-playground-secrets/apps/testing-secrets/app`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
+
+
+If everything goes right, you'll get the following output:
+
+```text
+[SUCCESS] Secret content is {
+  "secre_key": "secret_value"
+}
+```
+
 ## Running the tests
 
 ```bash
