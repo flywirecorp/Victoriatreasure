@@ -1,5 +1,6 @@
 require 's3secrets/helpers/s3'
 require 's3secrets/helpers/kms'
+require 'json'
 
 module S3Secrets
   class Reader
@@ -8,12 +9,15 @@ module S3Secrets
       @s3_helper = S3Secrets::Helpers::S3.new(s3_client, s3_resource)
     end
 
-    def get_secret(file_uri, key)
+    def get_secret(file_uri, key = '')
       object = File.extname(file_uri).empty? ? "#{file_uri}.json.encrypted" : file_uri
       bucket = @s3_helper.bucket_from_file_uri(object)
       file_path = @s3_helper.file_path_from_file_uri(object)
 
       decrypted_json = get_json_secret_content(bucket, file_path)
+
+      return JSON.pretty_generate(decrypted_json) if key == '' || key.nil?
+
       decrypted_json[key]
     end
 
