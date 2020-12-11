@@ -5,7 +5,7 @@
 aws_account_profile=$1
 
 aws-okta exec $aws_account_profile -- env | grep "AWS_" > secrets.env
-echo "Where are you going to create the secret? b, branch | s, staging | p, production"
+echo "Where are you going to create the secret? b, branch | s, staging | p, production | d, detect"
 
 read secret_location
 case "$secret_location" in
@@ -18,8 +18,11 @@ case "$secret_location" in
    p|production)
      ACCOUNT_ALIAS=victoria-production
    ;;
+   d|detect)
+    ACCOUNT_ALIAS=`aws-okta exec $aws_account_profile -- aws iam list-account-aliases --query 'AccountAliases[0]' --output text`
+   ;;
    *)
-      echo "Invalid answer, please choose between: b, branch | s, staging | p, production"
+      echo "Invalid answer, please choose between: b, branch | s, staging | p, production | d, detect"
       exit 1
    ;;
 esac
