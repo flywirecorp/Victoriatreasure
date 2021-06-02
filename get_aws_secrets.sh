@@ -27,7 +27,7 @@ case "$secret_location" in
    ;;
 esac
 
-KMS_KEY_ID=`aws-okta exec $aws_account_profile -- aws kms list-aliases | grep -h1 $ACCOUNT_ALIAS\" | grep TargetKeyId | awk -F '\"' '{print $4}'`
+KMS_KEY_ID=`aws-okta exec $aws_account_profile -- aws kms list-aliases --output json| grep -h1 $ACCOUNT_ALIAS\" | grep TargetKeyId | awk -F '\"' '{print $4}'`
 echo KMS_KEY_ID=$KMS_KEY_ID >> secrets.env
 
 echo "Credentials correctly set, now you are able to create secrets"
