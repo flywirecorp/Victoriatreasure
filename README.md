@@ -20,6 +20,15 @@ KMS_KEY_ID=
 
 Region should be set to the one used both by the S3 bucket and the KMS key, otherwise you will get an error.
 
+Check if `jq` command is installed:
+```
+jq --version
+```
+If not installed, you can do so with:
+```
+brew install jq
+```
+
 ## Usage to update/add a new value
 
 ```bash
