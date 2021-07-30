@@ -1,6 +1,7 @@
 #!/bin/bash
 
 [ -z `which aws-okta` ] && echo "Please run 'brew install aws-okta' in order to operate this script" && exit 1
+[ -z `which jq` ] && echo "Please run 'brew install jq' in order to operate this script" && exit 1
 
 aws_account_profile=$1
 
