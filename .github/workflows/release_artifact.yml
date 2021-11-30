@@ -41,7 +41,7 @@ jobs:
     - name: Push git tag
       run: |
         VERSION=$(cat $VERSION_FILE)
-        git tag -a $VERSION
+        git tag -a $VERSION -m "releasing: $VERSION"
         git push origin $VERSION
 
     - name: Push release image
