@@ -37,6 +37,7 @@ jobs:
       run: |
         VERSION=$(cat $VERSION_FILE)
         docker build -t $CONTAINER_RELEASE_IMAGE:$VERSION .
+        docker tag $CONTAINER_RELEASE_IMAGE:$VERSION $CONTAINER_RELEASE_IMAGE:latest
 
     - name: Push git tag
       run: |
@@ -49,3 +50,4 @@ jobs:
         VERSION=$(cat $VERSION_FILE)
         docker login -u ${DOCKER_HUB_USERNAME} -p "${DOCKER_HUB_PASSWORD}"
         docker push $CONTAINER_RELEASE_IMAGE:$VERSION
+        docker push $CONTAINER_RELEASE_IMAGE:latest
