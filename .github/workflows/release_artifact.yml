@@ -48,4 +48,4 @@ jobs:
       run: |
         VERSION=$(cat $VERSION_FILE)
         docker login -u ${DOCKER_HUB_USERNAME} -p "${DOCKER_HUB_PASSWORD}"
-        docker push ${CONTAINER_RELEASE_IMAGE}:$(VERSION)
+        docker push $CONTAINER_RELEASE_IMAGE:$VERSION
