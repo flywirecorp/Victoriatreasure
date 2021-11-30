@@ -19,6 +19,10 @@ jobs:
     - name: Docker linting
       run: docker run --rm -i hadolint/hadolint < Dockerfile
 
+    - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+      with:
+        token: '${{ secrets.GITHUB_TOKEN }}'
+
     - name: Unit testing
       run: |
         mv .dockerignore deploy
