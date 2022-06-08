@@ -7,7 +7,7 @@
 aws_account_profile=$1
 
 aws-okta exec $aws_account_profile -- env | grep "AWS_" > secrets.env
-echo "Where are you going to create the secret? b, branch | s, staging | p, production | d, detect"
+echo "AWS Account Alias for the secret? b, victoria-playground | s, victoria-staging | p, victoria-production | d, detect"
 
 read secret_location
 case "$secret_location" in
@@ -33,4 +33,5 @@ KMS_KEY_ID=`aws-okta exec $aws_account_profile -- aws kms list-aliases  --output
 
 echo KMS_KEY_ID=$KMS_KEY_ID >> secrets.env
 
-echo "Credentials correctly set, now you are able to create secrets"
+echo "Credentials set in ./secrets.env. victoriaTreasure ready"
+echo "Credentials will expire after an hour"

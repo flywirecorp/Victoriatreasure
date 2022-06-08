@@ -1,107 +1,79 @@
 # Victoria Secrets
 
-Victoria Secrets is an utility for handling secrets in S3 avoiding manual steps for decrypting or encrypt the files.
-
+Reminders:
+- always use `get_aws_secrets.sh` before victoriaTreasure
+- `get_aws_secrets.sh` depends on [aws-okta](https://confluence.flywire.tech/display/SRE/AWS+programmatic+credentials+via+Okta)
+- always use victoriaTreasure from your copy of the git repository (ie from the same folder as this Flywire.md file)
 
 ## Getting the secrets.env file
 
-Be sure you've properly installed and configured the [aws-okta](https://confluence.flywire.tech/display/SRE/AWS+programmatic+credentials+via+Okta), so you'll be able to run:
+To refresh your victoriaTreasure credentials run:
 
 ```bash
-$ ./get_aws_secrets.sh <your-aws-account-profile>
+$ ./get_aws_secrets.sh aws_staging_developers
 ```
 
-Your AWS account profile names can be found in `~/.aws/config`.
+It will create `secrets.env` file in the root path of the victoriaTreasure repo.
 
-Once you run this command, you'll be able to find a `secrets.env` file in the root path of the repo.
+YMMV and you may need to use a different AWS profile (ie not `aws_staging_developers`). Refer to `~/.aws/config` for the profiles configured in your machine.
 
-## Usage to update/add a new value
+## Usage
+
+### Build the container
+
+```
+$ docker build -t victoria_treasure .
+```
+
+### How to set a secret
 
 ```bash
-$ docker build -t victoria_treasure .
-# Edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key my_value
+$ ./get_aws_secrets.sh aws_staging_developers
+$ docker run --env-file=secrets.env victoria_treasure $VICTORIA_ACCOUNT_ALIAS$-secrets/$SECRET_PATH$ $MY_SECRET_KEY$ $MY_VALUE$
+```
+
+output:
+
+```text
+[SUCCESS] Secret my_secret_key added to victoria-playground-secrets/apps/testing-secrets/app
+```
+
+### How to get a secret
+
+```bash
+$ ./get_aws_secrets.sh aws_staging_developers
+$ docker run --env-file=secrets.env victoria_treasure $VICTORIA_ACCOUNT_ALIAS$-secrets/$SECRET_PATH$ $MY_SECRET_KEY$
+```
+
+output:
+```text
+[SUCCESS] Secret my_secret_key content is SUPER_SECRET_CONTENT
 ```
 
 Where:
 
-* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to edit, if you put a file that not exists in the s3, it will create a new one
-* `my_secret_key`: is the secret key to be added
-* `my_value`: is the value of that key
+* `$VICTORIA_ACCOUNT_ALIAS$` : a valid [account alias](https://confluence.flywire.tech/x/IbCDIw)
+  - ie one of: `victoria-production`, `victoria-staging`, `victoria-playground`
+* `$SECRET_PATH$`: the path to the secret
+  - must match what you use in your app.json
+  - the conventional path is: apps/$CI_PROJECT_NAME/app
+* `$MY_SECRET_KEY$`: the secret key
+* `$MY_VALUE$`: the value of the secret
 
-If everything goes right, you'll get the following output:
 
-```text
-[SUCCESS] Secret my_secret_key added to victoria-playground-secrets/apps/testing-secrets/app.json.encrypted
-```
-
-### What's happening behind the scenes
+## What's happening behind the scenes
 
 * Downloads and decrypt the specified file into memory if it exists, if not, it creates a new file in memory
 * Edits the file adding the specified key and value
 * Encrypts and upload the changes to S3, replacing the old file
 
+Secrets are stored in KMS encrypted json files in S3.
 
-## Usage to get a value
+## Notes
 
-```bash
-$ docker build -t victoria_treasure .
-# Edit the secrets.env file to add the necessary variables
-$ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app.json.encrypted my_secret_key
-```
+- The naming of the secret key is case sensitive. Therefore if the key is named MY_SECRET and you will read as "secret:$AWS_ACCOUNT_ALIAS-secrets/apps/$CI_PROJECT_NAME/app:my_secret" the pipeline will fail with "ERROR -- : Secret key MY_SECRET does not exist in...". As a guideline, use lowercase for naming your secret keys.
 
-Where:
+- All this process is done by this gem we have developed: [secrets-parser](https://github.com/peertransfer/secrets_parser)
 
-* `victoria-playground-secrets/apps/testing-secrets/app.json.encrypted`: is the route where the secret file is stored and you want to check, if you put a file that not exists in the s3, the result will be empty
-* `my_secret_key`: is the secret key to be read
-
-If everything goes right, you'll get the following output:
-
-```text
-[SUCCESS] Secret my_secret_key content is SUPER_SECRET_CONTENT
-```
-
-#### secrets.env
-
-Once you run get_aws_secrets it will create secrets.env with the following keys:
-
-```bash
-AWS_DEFAULT_REGION=
-AWS_REGION=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_OKTA_PROFILE=
-AWS_SESSION_TOKEN=
-AWS_SECURITY_TOKEN=
-```
-
-There is a `KMS_KEY_ID` for each AWS account, for getting the ID of the current account run:
-
-```bash
-$ aws kms list-aliases | grep -h1 $ACCOUNT_ALIAS | grep TargetKeyId
-```
-
-$ACCOUNT_ALIAS variable can have 3 different values depending where you want to create secret:
-
-* branch: victoria-playground
-* staging: victoria-staging
-* production: victoria-production
-
-The output will be something like:
-```json
-"TargetKeyId": "ca242e97-d284-4219-9bce-cea69c618ff8"
-```
-
-## Running the tests
-
-```bash
-$ rake
-```
-
-## Versioning
-
-In general, Victoria Secrets follows [semver](https://semver.org/)
-
-## Authors
-
-* **Super Mega Awesome SRE Team**
+- When a secret is changed the app needs to be restarted or edeployed to load the new secret value.
+- Size constraint for a secret value is 4096 bytes due to the limitation imposed by AWS KMS. If you get over that limit with app.json.encrypted, start a new file.
