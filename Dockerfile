@@ -1,4 +1,4 @@
-FROM ruby:2.6.1-alpine
+FROM gcr.io/registry-public/ruby:v2-stable
 
 ENV CONTAINER_ROOT /app
 RUN mkdir -p $CONTAINER_ROOT
