@@ -2,7 +2,7 @@
 
 [ -z `which jq` ] && echo "Please run 'brew install jq' in order to operate this script" && exit 1
 
-if ! [[ $(env | grep "AWS_") ]]; then
+if ! [[ $(env | grep "AWS_" | grep -E "ACCESS_KEY|SESSION_TOKEN") ]]; then
   echo "Please set required AWS environment variables"
   echo "[AWS SSO] Login to AWS SSO portal and copy/paste environment variables"
   echo "[DEPRECATED aws-okta] Run 'aws-okta exec <aws_account_profile> -- \$SHELL'"
