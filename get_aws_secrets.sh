@@ -38,6 +38,7 @@ esac
 KMS_KEY_ID=`aws kms list-aliases --region $AWS_REGION --output json | jq -r --arg ACCOUNT_ALIAS $ACCOUNT_ALIAS '.Aliases[] | select(.AliasName|endswith($ACCOUNT_ALIAS)) | .TargetKeyId'`
 
 echo KMS_KEY_ID=$KMS_KEY_ID >> secrets.env
+echo AWS_DEFAULT_REGION=$AWS_REGION >> secrets.env
 
 echo "Credentials set in ./secrets.env. victoriaTreasure ready"
 echo "Credentials will expire after an hour"
