@@ -1,27 +1,33 @@
 #!/bin/bash
 
-[ -z `which aws-okta` ] && echo "Please run 'brew install aws-okta' in order to operate this script" && exit 1
 [ -z `which jq` ] && echo "Please run 'brew install jq' in order to operate this script" && exit 1
-[ -z "$1" ] && echo -e "Error! aws_account_profile is missing!\n\n  ex: $0 <aws_account_profile>\n" && exit 1 
 
-aws_account_profile=$1
+if ! [[ $(env | grep "AWS_") ]]; then
+  echo "Please set required AWS environment variables"
+  echo "[AWS SSO] Login to AWS SSO portal and copy/paste environment variables"
+  echo "[DEPRECATED aws-okta] Run 'aws-okta exec <aws_account_profile> -- \$SHELL'"
+  exit 1
+fi
 
-aws-okta exec $aws_account_profile -- env | grep "AWS_" > secrets.env
+env | grep "AWS_" > secrets.env
 echo "AWS Account Alias for the secret? b, victoria-playground | s, victoria-staging | p, victoria-production | d, detect"
 
 read secret_location
 case "$secret_location" in
   b|branch)
     ACCOUNT_ALIAS=victoria-playground
+    AWS_REGION=us-east-1
   ;;
   s|staging)
     ACCOUNT_ALIAS=victoria-staging
+    AWS_REGION=us-east-1
   ;;
   p|production)
     ACCOUNT_ALIAS=victoria-production
+    AWS_REGION=us-east-1
   ;;
   d|detect)
-    ACCOUNT_ALIAS=`aws-okta exec $aws_account_profile -- aws iam list-account-aliases --query 'AccountAliases[0]' --output text`
+    ACCOUNT_ALIAS=`aws iam list-account-aliases --query 'AccountAliases[0]' --output text`
   ;;
    *)
       echo "Invalid answer, please choose between: b, branch | s, staging | p, production | d, detect"
@@ -29,7 +35,7 @@ case "$secret_location" in
   ;;
 esac
 
-KMS_KEY_ID=`aws-okta exec $aws_account_profile -- aws kms list-aliases  --output json | jq -r --arg ACCOUNT_ALIAS $ACCOUNT_ALIAS '.Aliases[] | select(.AliasName|endswith($ACCOUNT_ALIAS)) | .TargetKeyId'`
+KMS_KEY_ID=`aws kms list-aliases --region $AWS_REGION --output json | jq -r --arg ACCOUNT_ALIAS $ACCOUNT_ALIAS '.Aliases[] | select(.AliasName|endswith($ACCOUNT_ALIAS)) | .TargetKeyId'`
 
 echo KMS_KEY_ID=$KMS_KEY_ID >> secrets.env
 
