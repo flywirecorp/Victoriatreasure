@@ -2,7 +2,7 @@
 
 Reminders:
 - always use `get_aws_secrets.sh` before victoriaTreasure
-- `get_aws_secrets.sh` depends on [aws-okta](https://confluence.flywire.tech/display/SRE/AWS+programmatic+credentials+via+Okta)
+- before using `get_aws_secrets.sh` perform the `aws sso login` as described below
 - always use victoriaTreasure from your copy of the git repository (ie from the same folder as this Flywire.md file)
 
 ## Getting the secrets.env file
@@ -10,12 +10,13 @@ Reminders:
 To refresh your victoriaTreasure credentials run:
 
 ```bash
-$ ./get_aws_secrets.sh aws_staging_developers
+aws sso login
+# Then go to AWS Single Sign-on in your Okta apps, login to the specific account and select "Command line or programmatic access"
+# You will then see "Option 1: Set AWS environment variables". Copy and paste those values in your terminal, then execute:
+$ ./get_aws_secrets.sh
 ```
 
 It will create `secrets.env` file in the root path of the victoriaTreasure repo.
-
-YMMV and you may need to use a different AWS profile (ie not `aws_staging_developers`). Refer to `~/.aws/config` for the profiles configured in your machine.
 
 ## Usage
 
@@ -28,7 +29,7 @@ $ docker build -t victoria_treasure .
 ### How to set a secret
 
 ```bash
-$ ./get_aws_secrets.sh aws_staging_developers
+$ ./get_aws_secrets.sh
 $ docker run --env-file=secrets.env victoria_treasure $VICTORIA_ACCOUNT_ALIAS$-secrets/$SECRET_PATH$ $MY_SECRET_KEY$ $MY_VALUE$
 ```
 
@@ -41,7 +42,7 @@ output:
 ### How to get a secret
 
 ```bash
-$ ./get_aws_secrets.sh aws_staging_developers
+$ ./get_aws_secrets.sh
 $ docker run --env-file=secrets.env victoria_treasure $VICTORIA_ACCOUNT_ALIAS$-secrets/$SECRET_PATH$ $MY_SECRET_KEY$
 ```
 
