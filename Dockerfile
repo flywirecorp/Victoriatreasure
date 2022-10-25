@@ -10,4 +10,4 @@ RUN bundle install
 
 COPY . $CONTAINER_ROOT/
 
-ENTRYPOINT ["ruby", "s3secrets.rb"]
+CMD ["ruby", "s3secrets.rb"]
