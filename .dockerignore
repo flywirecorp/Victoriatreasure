@@ -1,4 +1,3 @@
 Dockerfile
 vendor/
 .git/
-spec/
