@@ -1,4 +1,8 @@
 Dockerfile
-vendor/
-.git/
+docs/
+imgs/
 spec/
+vendor/
+.github/
+.git/
+*.md
