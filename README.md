@@ -15,10 +15,20 @@ Victoria Treasure is an utility for handling secrets in S3.
 * Edits the file adding the specified key and value
 * Encrypts and upload the changes to S3, replacing the old file
 
+## Prerequisites
+
+- Docker
+
+## Build the container
+
+```bash
+docker build -t victoria_treasure --target=test .
+```
+
 ## Running the tests
 
 ```bash
-$ rake
+docker run victoria_treasure rake test
 ```
 
 ## Versioning

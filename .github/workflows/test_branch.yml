@@ -19,7 +19,5 @@ jobs:
 
     - name: Unit testing
       run: |
-        mv .dockerignore deploy
-        docker build -t $CONTAINER_TEST_IMAGE .
-        mv deploy/.dockerignore .
+        docker build -t $CONTAINER_TEST_IMAGE --target=test .
         docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake test

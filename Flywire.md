@@ -23,7 +23,7 @@ It will create `secrets.env` file in the root path of the victoriaTreasure repo.
 ### Build the container
 
 ```
-$ docker build -t victoria_treasure .
+$ docker build -t victoria_treasure --target=release .
 ```
 
 ### How to set a secret

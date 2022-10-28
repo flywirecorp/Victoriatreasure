@@ -1,7 +1,7 @@
 ## Usage to update/add a new value
 
 ```bash
-$ docker build -t victoria_treasure .
+$ docker build -t victoria_treasure --target=release .
 # Remember to edit the secrets.env file to add the necessary variables
 $ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app my_secret_key my_value
 ```
@@ -21,7 +21,7 @@ If everything goes right, you'll get the following output:
 ## Usage to get a value
 
 ```bash
-$ docker build -t victoria_treasure .
+$ docker build -t victoria_treasure --target=release .
 # Edit the secrets.env file to add the necessary variables
 $ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app my_secret_key
 ```
@@ -41,7 +41,7 @@ If everything goes right, you'll get the following output:
 ## Usage to get the whole secrets file decrypted
 
 ```bash
-$ docker build -t victoria_treasure .
+$ docker build -t victoria_treasure --target=release .
 # Edit the secrets.env file to add the necessary variables
 $ docker run --env-file=secrets.env victoria_treasure victoria-playground-secrets/apps/testing-secrets/app
 ```

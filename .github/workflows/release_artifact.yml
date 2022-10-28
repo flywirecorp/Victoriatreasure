@@ -25,9 +25,7 @@ jobs:
 
     - name: Unit testing
       run: |
-        mv .dockerignore deploy
-        docker build -t $CONTAINER_TEST_IMAGE .
-        mv deploy/.dockerignore .
+        docker build -t $CONTAINER_TEST_IMAGE --target=test .
         docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake test
 
     - name: Retrieve version
@@ -36,7 +34,7 @@ jobs:
     - name: Build release image
       run: |
         VERSION=$(cat $VERSION_FILE)
-        docker build -t $CONTAINER_RELEASE_IMAGE:$VERSION .
+        docker build -t $CONTAINER_RELEASE_IMAGE:$VERSION --target=release .
         docker tag $CONTAINER_RELEASE_IMAGE:$VERSION $CONTAINER_RELEASE_IMAGE:latest
 
     - name: Push git tag
