@@ -8,7 +8,7 @@ FROM base as test
 COPY Gemfile Gemfile.lock $CONTAINER_ROOT/
 RUN bundle install
 COPY . $CONTAINER_ROOT/
-CMD ["ruby", "s3secrets.rb"]
+ENTRYPOINT ["ruby", "s3secrets.rb"]
 
 FROM base as release
 COPY Gemfile Gemfile.lock $CONTAINER_ROOT/
@@ -16,4 +16,4 @@ RUN bundle install --without=test
 COPY lib $CONTAINER_ROOT/lib
 COPY s3secrets.rb Rakefile LICENSE $CONTAINER_ROOT/
 
-CMD ["ruby", "s3secrets.rb"]
+ENTRYPOINT ["ruby", "s3secrets.rb"]
