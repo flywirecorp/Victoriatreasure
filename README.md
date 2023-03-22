@@ -27,8 +27,9 @@ docker build -t victoria_treasure --target=test .
 
 ## Running the tests
 
+
 ```bash
-docker run --entrypoint="" victoria_treasure rake test
+$ docker run --rm -ti --entrypoint="" victoria_treasure rake
 ```
 
 ## Versioning

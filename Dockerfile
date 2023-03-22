@@ -1,4 +1,4 @@
-FROM gcr.io/registry-public/ruby:v2-stable as base
+FROM gcr.io/registry-public/ruby:v3-stable
 
 ENV CONTAINER_ROOT /app
 RUN mkdir -p $CONTAINER_ROOT
@@ -6,7 +6,12 @@ WORKDIR $CONTAINER_ROOT
 
 FROM base as test
 COPY Gemfile Gemfile.lock $CONTAINER_ROOT/
-RUN bundle install
+
+RUN apt update -y && \
+    apt-get install -y build-essential && \
+    bundle install && \
+    apt-get remove -y build-essential
+
 COPY . $CONTAINER_ROOT/
 ENTRYPOINT ["ruby", "s3secrets.rb"]
 
