@@ -7,10 +7,12 @@ WORKDIR $CONTAINER_ROOT
 FROM base as test
 COPY Gemfile Gemfile.lock $CONTAINER_ROOT/
 
-RUN apt update -y && \
-    apt-get install -y build-essential && \
-    bundle install && \
-    apt-get remove -y build-essential
+RUN apt-get update -y \
+    && apt-get install -y build-essential \
+    && bundle install \
+    && apt-get remove -y build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . $CONTAINER_ROOT/
 ENTRYPOINT ["ruby", "s3secrets.rb"]
