@@ -11,11 +11,11 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - name: Docker linting
-      run: docker run --rm -i hadolint/hadolint < Dockerfile
+      run: docker run --rm -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml" -i hadolint/hadolint < Dockerfile
 
     - name: Unit testing
       run: |
