@@ -7,7 +7,7 @@
 
 Victoria Treasure is an utility for handling secrets in S3.
 
-**Internal Flywire users**: please read [./Flywire.md](./Flywire.md).
+**Internal Flywire users**: please use `magellan` developer experience tool. As of 2023 Victoriatreasure is an internal implementation detail and should not be used for day to day operations.
 
 ## What's happening behind the scenes
 
