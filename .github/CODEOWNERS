@@ -3,5 +3,5 @@
 # Order is important. The last matching pattern has the most precedence.
 # You can also use email addresses if you prefer.
 
-CODEOWNERS @peertransfer/security
-* @peertransfer/security
+CODEOWNERS @flywirecorp/security
+* @flywirecorp/security
