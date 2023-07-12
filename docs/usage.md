@@ -1,4 +1,4 @@
-## Usage to update/add a new value
+## Usage to update/add a new values
 
 ```bash
 $ docker build -t victoria_treasure --target=release .
