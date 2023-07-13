@@ -2,7 +2,6 @@ Dockerfile
 docs/
 imgs/
 spec/
-deploy/
 vendor/
 .github/
 .git/
