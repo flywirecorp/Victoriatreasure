@@ -4,20 +4,25 @@ on:
   push:
     branches:
     - master
+    - arm64
 env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
   CONTAINER_TEST_IMAGE: victoriatreasure-test
-  VERSION_FILE: version.txt
   CONTAINER_RELEASE_IMAGE: flywire/victoriatreasure
 
 jobs:
   release:
     runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.version.outputs }}
     steps:
     - uses: actions/checkout@v2
     - name: Docker linting
       run: docker run --rm -v "$(pwd)/.hadolint.yaml:/.hadolint.yaml" -i hadolint/hadolint < Dockerfile
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+      with:
+        platforms: 'arm64,arm,linux/amd64'
 
     - uses: oleksiyrudenko/gha-git-credentials@v2-latest
       with:
@@ -29,23 +34,22 @@ jobs:
         docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake test
 
     - name: Retrieve version
-      run: docker run --entrypoint="" $CONTAINER_TEST_IMAGE rake version > $VERSION_FILE
+      id: get-version 
+      run: echo "version"="$(cat .semver)" >> "$GITHUB_OUTPUT" 
 
-    - name: Build release image
-      run: |
-        VERSION=$(cat $VERSION_FILE)
-        docker build -t $CONTAINER_RELEASE_IMAGE:$VERSION --target=release .
-        docker tag $CONTAINER_RELEASE_IMAGE:$VERSION $CONTAINER_RELEASE_IMAGE:latest
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: flywire/victoriatreasure:test , flywire/victoriatreasure:${{steps.get-version.outputs.version}}
 
     - name: Push git tag
       run: |
-        VERSION=$(cat $VERSION_FILE)
-        git tag -a $VERSION -m "releasing: $VERSION"
-        git push origin $VERSION
-
-    - name: Push release image
-      run: |
-        VERSION=$(cat $VERSION_FILE)
-        docker login -u ${DOCKER_HUB_USERNAME} -p "${DOCKER_HUB_PASSWORD}"
-        docker push $CONTAINER_RELEASE_IMAGE:$VERSION
-        docker push $CONTAINER_RELEASE_IMAGE:latest
+        git tag -a ${{steps.get-version.outputs.version}} -m "releasing: ${{steps.get-version.outputs.version}}"
+        git push origin ${{steps.get-version.outputs.version}}
